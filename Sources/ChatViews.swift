@@ -612,7 +612,7 @@ struct ForwardView: View {
                 Text(selected.isEmpty ? "转发" : "转发(\(selected.count))")
                     .font(.system(size: 15.5, weight: .medium)).foregroundColor(.white)
                     .padding(.horizontal, 22).frame(height: 44)
-                    .background(selected.isEmpty ? T.ter : LinearGradient(colors: [T.blueLight, T.blue], startPoint: .top, endPoint: .bottom))
+                    .background(selected.isEmpty ? AnyShapeStyle(T.ter) : AnyShapeStyle(T.gradCTA))
                     .clipShape(Capsule())
             }
             .buttonStyle(PressStyle())

@@ -68,7 +68,7 @@ struct GroupSettingsView: View {
                         .padding(.horizontal, 14).padding(.bottom, 12)
 
                         VStack(spacing: 0) {
-                            SettingRow(title: "退出群聊", danger: true, showChevron: false) {
+                            SettingRow(title: "退出群聊", showChevron: false, danger: true) {
                                 H.warn()
                                 store.groupLeave(gid)
                                 dismiss()

@@ -70,7 +70,7 @@ struct FriendProfileView: View {
                     VStack(spacing: 0) {
                         SettingRow(title: "清空聊天记录") { }
                         RowSep()
-                        SettingRow(title: "删除联系人", danger: true, showChevron: false) {
+                        SettingRow(title: "删除联系人", showChevron: false, danger: true) {
                             H.warn()
                             store.delFriend(id: userId)
                             dismiss()

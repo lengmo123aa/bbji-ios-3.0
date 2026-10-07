@@ -82,7 +82,7 @@ struct AccountView: View {
                     .padding(.horizontal, 14).padding(.bottom, 12)
 
                     VStack(spacing: 0) {
-                        SettingRow(title: "退出登录", danger: true, showChevron: false) { confirmOut = true }
+                        SettingRow(title: "退出登录", showChevron: false, danger: true) { confirmOut = true }
                     }
                     .bbCard()
                     .padding(.horizontal, 14)
@@ -136,7 +136,7 @@ struct PrivacyView: View {
                     TipText(text: "锁上之后：中间是 logo，点「解锁」输 4 位密码才能进来。不挡系统截屏（锁着本来就看不到内容）。")
 
                     VStack(spacing: 0) {
-                        SettingRow(title: "立刻锁定", danger: true, showChevron: false) {
+                        SettingRow(title: "立刻锁定", showChevron: false, danger: true) {
                             if lockPw.isEmpty {
                                 session.lockMsg = "先设置 4 位锁定密码"
                                 H.warn()
@@ -324,6 +324,7 @@ struct LockRulesView: View {
 /* ==================== 46 锁定覆盖层（锁屏） ==================== */
 struct LockOverlay: View {
     @EnvironmentObject var session: Session
+    @EnvironmentObject var store: Store
     @AppStorage("bbji30_lock_pw") private var lockPw = ""
     @AppStorage("bbji30_calc_disguise") private var calcDisguise = false
     @AppStorage("bbji30_lock_bio") private var allowBio = true
@@ -350,7 +351,7 @@ struct LockOverlay: View {
                 Text(timeStr)
                     .font(.system(size: 15)).foregroundColor(.white.opacity(0.72))
                     .padding(.top, 14)
-                Ava(name: session.myName.isEmpty ? "B" : session.myName, size: 96, img: session.myAvatar)
+                Ava(name: session.myName.isEmpty ? "B" : session.myName, size: 96, img: store.myAvatar)
                     .shadow(color: .white.opacity(0.12), radius: 4)
                     .padding(.top, 36)
                 Text(session.myName.isEmpty ? "BB鸡" : session.myName)
@@ -456,7 +457,7 @@ struct CalcLockView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 66)
                 .background(keyColor(k))
-                .clipShape(k == "0" ? RoundedRectangle(cornerRadius: 40, style: .continuous) : Circle())
+                .clipShape(Circle())
                 .frame(maxWidth: k == "0" ? .infinity : nil)
                 .gridCellColumns(k == "0" ? 2 : 1)
         }
@@ -785,7 +786,7 @@ struct GeneralView: View {
                         RowSep()
                         SettingRow(title: "清空缓存", value: cacheText) {
                             URLCache.shared.removeAllCachedResponses()
-                            ImgStore.shared = ImgStore()
+                            ImgStore.shared.clear()
                             H.ok()
                         }
                     }

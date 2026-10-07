@@ -93,6 +93,7 @@ final class ImgStore {
     static var shared = ImgStore()
     private let cache = NSCache<NSURL, UIImage>()
     private init() { cache.countLimit = 240 }
+    func clear() { cache.removeAllObjects() }
     func cached(_ u: URL) -> UIImage? { cache.object(forKey: u as NSURL) }
     func image(_ u: URL) async -> UIImage? {
         if let i = cached(u) { return i }
@@ -354,7 +355,7 @@ struct BBSwitch: View {
             withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) { on.toggle() }
         } label: {
             ZStack(alignment: .leading) {
-                Capsule().fill(on ? T.gradCTA : Color(red: 0.863, green: 0.882, blue: 0.914))
+                Capsule().fill(on ? AnyShapeStyle(T.gradCTA) : AnyShapeStyle(Color(red: 0.863, green: 0.882, blue: 0.914)))
                     .frame(width: 46, height: 28)
                 Circle().fill(.white)
                     .frame(width: 24, height: 24)

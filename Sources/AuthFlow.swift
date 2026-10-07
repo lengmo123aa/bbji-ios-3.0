@@ -332,7 +332,7 @@ struct RegisterScreen: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     NavBar(title: "", onBack: back)
-                    BrandView(logoSize: 68, titleSize: 25, title: "注册 BB鸡")
+                    BrandView(logoSize: 68, title: "注册 BB鸡", titleSize: 25)
                         .padding(.top, 6)
 
                     VStack(spacing: 0) {
