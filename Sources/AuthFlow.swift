@@ -162,7 +162,6 @@ private struct MainBlob: View {
                     .blur(radius: 3)
                     .rotationEffect(.degrees(-18))
                     .offset(x: 190 * 0.06, y: -190 * 0.24)
-                    .clipShape(blob.frame(width: 190, height: 190))
             )
             .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
     }
