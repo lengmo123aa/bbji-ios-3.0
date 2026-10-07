@@ -101,7 +101,7 @@ struct ChatView: View {
                         let showDay = i == 0 || (m.ts - msgs[i - 1].ts) > 5 * 60 * 1000
                         if showDay {
                             Text(dayText(m.ts)).font(.system(size: 13)).foregroundColor(T.ter)
-                                .padding(.top, 4).id(m.id)
+                                .padding(.top, 4).id("day-" + m.id)
                         }
                         if isGroup && m.from != store.meUserId,
                            i == 0 || msgs[i - 1].from != m.from {

@@ -551,6 +551,7 @@ struct ScanView: View {
         .onAppear {
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { beamY = 80 }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 
     private func corner(_ a: Alignment) -> some View {
