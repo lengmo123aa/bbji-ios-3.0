@@ -109,7 +109,7 @@ struct MessagesView: View {
             ZStack(alignment: .top) {
                 AppBg()
                 VStack(spacing: 0) {
-                    TopTitle("消息") {
+                    TopTitle(text: "消息") {
                         Button {
                             H.tap()
                             withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) { plusMenu = true }
@@ -336,7 +336,7 @@ struct ContactsView: View {
         NavigationStack(path: $path) {
             AppBg()
             VStack(spacing: 0) {
-                TopTitle("通讯录") {
+                TopTitle(text: "通讯录") {
                     Button {
                         H.tap()
                         path.append(.addFriend)
@@ -499,7 +499,7 @@ struct MeView: View {
         NavigationStack(path: $path) {
             AppBg()
             VStack(spacing: 0) {
-                TopTitle("我")
+                TopTitle(text: "我")
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
                         VStack(spacing: 0) {
