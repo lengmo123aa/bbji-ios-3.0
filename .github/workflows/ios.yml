@@ -1,0 +1,103 @@
+name: Build BBji 3.0 (unsigned IPA + 模拟器截图)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 看 Xcode 版本
+        run: xcodebuild -version
+
+      - name: 装工具（xcodegen 生成工程、ldid 假签名）
+        run: brew install xcodegen ldid
+
+      - name: 生成 Xcode 工程
+        run: xcodegen generate
+
+      # ---------- ① 真机包（不签名 + ldid 假签名 → 巨魔装） ----------
+      - name: 编译真机包（不签名）
+        run: |
+          xcodebuild \
+            -project BBji3.xcodeproj \
+            -scheme BBji3 \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: 打 ipa（ldid 假签名）
+        run: |
+          APP="build/Build/Products/Release-iphoneos/BBji3.app"
+          ldid -S "$APP/BBji3"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry BBji-iOS-3.0.0.ipa Payload
+          echo "--- 自检 ---"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleDisplayName" "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/Info.plist"
+          ls "$APP" | grep -i "Assets.car" || echo "（没有图标资源！）"
+
+      # ---------- ② 模拟器截图（关键页给用户看效果） ----------
+      - name: 编译模拟器包
+        run: |
+          xcodebuild \
+            -project BBji3.xcodeproj \
+            -scheme BBji3 \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath simbuild \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: 起模拟器截图
+        run: |
+          xcrun simctl list devices available | head -20
+          BOOT=$(xcrun simctl list devices available | grep -m1 "iPhone" | sed -E 's/.*\(([A-Z0-9-]+)\).*/\1/')
+          echo "用模拟器 $BOOT"
+          xcrun simctl boot "$BOOT" || true
+          APP="simbuild/Build/Products/Debug-iphonesimulator/BBji3.app"
+          BID=cn.xkmd.bbji.ios30
+          # 01 启动页
+          xcrun simctl install "$BOOT" "$APP"
+          xcrun simctl launch "$BOOT" $BID
+          sleep 4
+          xcrun simctl io "$BOOT" screenshot shot-01-启动页.png || true
+          xcrun simctl terminate "$BOOT" $BID || true
+          # 02 登录页（跳过启动页）
+          xcrun simctl launch "$BOOT" $BID -login
+          sleep 3
+          xcrun simctl io "$BOOT" screenshot shot-02-登录页.png || true
+          xcrun simctl terminate "$BOOT" $BID || true
+          ls -la *.png
+
+      # ---------- ③ 挂 Release（ipa + 截图都是附件） ----------
+      - name: 发布 Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v3.0.0-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" \
+            --title "BB鸡 3.0 · $TAG" \
+            --notes "原生 SwiftUI 重写。本轮：01 启动页 + 02 登录页（对齐效果图 v7）。" \
+            BBji-iOS-3.0.0.ipa shot-*.png || \
+          gh release upload "$TAG" BBji-iOS-3.0.0.ipa shot-*.png --clobber
+          gh release view "$TAG" --json url,assets
+
+      - name: 也传一份 Artifact 备用
+        uses: actions/upload-artifact@v4
+        with:
+          name: BBji-iOS-3.0.0-ipa
+          path: BBji-iOS-3.0.0.ipa
+          retention-days: 30
