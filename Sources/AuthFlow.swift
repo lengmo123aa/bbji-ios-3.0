@@ -107,58 +107,64 @@ struct SplashScreen: View {
 struct GlassBlobs: View {
     var body: some View {
         ZStack {
-            /* o1：190×190 的主 blob（不规则圆，用两轴缩放的椭圆近似） */
-            BlobShape()
-                .frame(width: 190, height: 190)
-                .background(
-                    ZStack {
-                        LinearGradient(colors: [Color(red: 0.863, green: 0.914, blue: 0.988).opacity(0.97),
-                                                Color(red: 0.706, green: 0.800, blue: 0.949).opacity(0.84)],
-                                       startPoint: .topLeading, endPoint: .bottomTrailing)
-                        RadialGradient(colors: [Color(red: 0.557, green: 0.706, blue: 0.933).opacity(0.88),
-                                                Color(red: 0.737, green: 0.824, blue: 0.965).opacity(0.52),
-                                                .white.opacity(0)],
-                                       center: UnitPoint(x: 0.68, y: 0.74), startRadius: 0, endRadius: 160)
-                        RadialGradient(colors: [.white.opacity(0.99), .white.opacity(0.20), .white.opacity(0)],
-                                       center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120)
-                    }
-                )
-                .clipShape(BlobShape())
-                .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
-                .overlay(
-                    /* o1 的高光条 */
-                    Ellipse()
-                        .fill(.white.opacity(0.88))
-                        .frame(width: 190 * 0.32, height: 190 * 0.22)
-                        .blur(radius: 3)
-                        .rotationEffect(.degrees(-18))
-                        .offset(x: 190 * 0.06, y: -190 * 0.24)
-                )
-
-            /* o2：右上小球 86 */
+            MainBlob()
             Circle()
                 .frame(width: 86, height: 86)
-                .foregroundStyle(
+                .background(
                     LinearGradient(colors: [Color(red: 0.894, green: 0.933, blue: 0.992).opacity(0.95),
                                             Color(red: 0.761, green: 0.839, blue: 0.969).opacity(0.80)],
                                    startPoint: .topLeading, endPoint: .bottomTrailing)
                 )
+                .clipShape(Circle())
                 .overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 0.5))
                 .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.15), radius: 12, y: 11)
                 .offset(x: (238 / 2) - (86 / 2) - 2, y: -(204 / 2) + (86 / 2) + 2)
 
-            /* o3：左下小球 60 */
             Circle()
                 .frame(width: 60, height: 60)
-                .foregroundStyle(
+                .background(
                     LinearGradient(colors: [Color(red: 0.941, green: 0.961, blue: 0.992).opacity(0.92),
                                             Color(red: 0.831, green: 0.890, blue: 0.973).opacity(0.68)],
                                    startPoint: .topLeading, endPoint: .bottomTrailing)
                 )
+                .clipShape(Circle())
                 .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.13), radius: 10, y: 9)
                 .offset(x: -(238 / 2) + (60 / 2) + 2, y: (204 / 2) - (60 / 2) - 2)
         }
         .frame(width: 238, height: 204)
+    }
+}
+
+private struct MainBlob: View {
+    var body: some View {
+        let blob = BlobShape()
+        return blob
+            .frame(width: 190, height: 190)
+            .background(blobFill)
+            .clipShape(blob)
+            .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
+            .overlay(
+                Ellipse()
+                    .fill(.white.opacity(0.88))
+                    .frame(width: 190 * 0.32, height: 190 * 0.22)
+                    .blur(radius: 3)
+                    .rotationEffect(.degrees(-18))
+                    .offset(x: 190 * 0.06, y: -190 * 0.24)
+            )
+    }
+
+    private var blobFill: some View {
+        ZStack {
+            LinearGradient(colors: [Color(red: 0.863, green: 0.914, blue: 0.988).opacity(0.97),
+                                    Color(red: 0.706, green: 0.800, blue: 0.949).opacity(0.84)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
+            RadialGradient(colors: [Color(red: 0.557, green: 0.706, blue: 0.933).opacity(0.88),
+                                    Color(red: 0.737, green: 0.824, blue: 0.965).opacity(0.52),
+                                    .white.opacity(0)],
+                           center: UnitPoint(x: 0.68, y: 0.74), startRadius: 0, endRadius: 160)
+            RadialGradient(colors: [.white.opacity(0.99), .white.opacity(0.20), .white.opacity(0)],
+                           center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120)
+        }
     }
 }
 
