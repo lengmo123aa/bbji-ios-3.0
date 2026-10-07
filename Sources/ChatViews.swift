@@ -275,7 +275,7 @@ struct BubbleRow: View {
         HStack(alignment: .top, spacing: 9) {
             if mine { Spacer(minLength: 40) }
             if !mine {
-                Ava(name: store.name(of: msg.from, isGroup: isGroup), size: 38,
+                Ava(name: store.name(of: msg.from, isGroup: false), size: 38,
                     img: store.people[msg.from]?.avatar ?? "")
             }
             VStack(alignment: mine ? .trailing : .leading, spacing: 4) {
