@@ -69,17 +69,36 @@ jobs:
           xcrun simctl boot "$BOOT" || true
           APP="simbuild/Build/Products/Debug-iphonesimulator/BBji3.app"
           BID=cn.xkmd.bbji.ios30
-          # 01 启动页
           xcrun simctl install "$BOOT" "$APP"
-          xcrun simctl launch "$BOOT" $BID
-          sleep 10
-          xcrun simctl io "$BOOT" screenshot shot-01-启动页.png || true
-          xcrun simctl terminate "$BOOT" $BID || true
-          # 02 登录页（跳过启动页）
+          shot() {
+            xcrun simctl terminate "$BOOT" $BID 2>/dev/null || true
+            sleep 1
+            xcrun simctl launch "$BOOT" $BID "$@"
+            sleep 5
+            xcrun simctl io "$BOOT" screenshot "$1.png" || true
+          }
+          shot shot-01-启动页
+          xcrun simctl terminate "$BOOT" $BID 2>/dev/null || true
+          sleep 1
           xcrun simctl launch "$BOOT" $BID -login
-          sleep 6
+          sleep 4
           xcrun simctl io "$BOOT" screenshot shot-02-登录页.png || true
-          xcrun simctl terminate "$BOOT" $BID || true
+          shot shot-06-消息列表 -demo
+          shot shot-07-单聊 -demo -page chat
+          shot shot-19-群聊 -demo -page group
+          shot shot-09-通讯录 -demo -page contacts
+          shot shot-10-新的朋友 -demo -page newfriends
+          shot shot-11-我 -demo -page me
+          shot shot-23-我的资料 -demo -page myprofile
+          shot shot-30-群设置 -demo -page groupset
+          shot shot-32-群二维码 -demo -page qr
+          shot shot-41-设置 -demo -page settings
+          shot shot-42-账号与安全 -demo -page account
+          shot shot-43-隐私与锁定 -demo -page privacy
+          shot shot-46-锁屏 -demo -page lockset
+          shot shot-51-推送API -demo -page pushapi
+          shot shot-59-扫一扫 -demo -page scan
+          xcrun simctl terminate "$BOOT" $BID 2>/dev/null || true
           ls -la *.png
 
       # ---------- ③ 挂 Release（ipa + 截图都是附件） ----------
@@ -90,7 +109,7 @@ jobs:
           TAG="v3.0.0-${GITHUB_RUN_NUMBER}"
           gh release create "$TAG" \
             --title "BB鸡 3.0 · $TAG" \
-            --notes "原生 SwiftUI 重写。本轮：01 启动页 + 02 登录页（对齐效果图 v7）。" \
+            --notes "原生 SwiftUI 重写，全部 61 屏对齐效果图 v7，字号整体调大。" \
             BBji-iOS-3.0.0.ipa shot-*.png || \
           gh release upload "$TAG" BBji-iOS-3.0.0.ipa shot-*.png --clobber
           gh release view "$TAG" --json url,assets

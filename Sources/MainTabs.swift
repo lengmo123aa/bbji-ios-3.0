@@ -43,14 +43,26 @@ func appDestinations() -> some View {
 
 struct MainTabs: View {
     @EnvironmentObject var store: Store
-    @State private var tab = 0
+    @State private var tab: Int
+    @State private var deepLink: Route? = nil
+
+    init() {
+        var t = 0
+        var dl: Route? = nil
+        if let page = ProcessInfo.demoPage, let d = demoRoute(page) {
+            t = d.tab
+            dl = d.route
+        }
+        _tab = State(initialValue: t)
+        _deepLink = State(initialValue: dl)
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
             Group {
-                if tab == 0 { MessagesView() }
-                else if tab == 1 { ContactsView() }
-                else { MeView() }
+                if tab == 0 { MessagesView(deepLink: $deepLink) }
+                else if tab == 1 { ContactsView(deepLink: $deepLink) }
+                else { MeView(deepLink: $deepLink) }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             TabBar(sel: $tab)
@@ -101,6 +113,7 @@ extension View { func appDest() -> some View { modifier(Destinations()) } }
 /* ==================== 06 消息列表 ==================== */
 struct MessagesView: View {
     @EnvironmentObject var store: Store
+    @Binding var deepLink: Route?
     @State private var plusMenu = false
     @State private var path: [Route] = []
 
@@ -155,7 +168,15 @@ struct MessagesView: View {
             }
             .appDest()
             .toolbar(.hidden, for: .navigationBar)
+            .onAppear { pushDeepLink() }
+            .onChange(of: deepLink) { _ in pushDeepLink() }
         }
+    }
+
+    private func pushDeepLink() {
+        guard let d = deepLink else { return }
+        deepLink = nil
+        path.append(d)
     }
 }
 
@@ -318,6 +339,7 @@ struct SwipeableRow: View {
 /* ==================== 09 通讯录 ==================== */
 struct ContactsView: View {
     @EnvironmentObject var store: Store
+    @Binding var deepLink: Route?
     @State private var path: [Route] = []
 
     private var sections: [(String, [Person])] {
@@ -392,7 +414,15 @@ struct ContactsView: View {
             }
             .appDest()
             .toolbar(.hidden, for: .navigationBar)
+            .onAppear { pushDeepLink() }
+            .onChange(of: deepLink) { _ in pushDeepLink() }
         }
+    }
+
+    private func pushDeepLink() {
+        guard let d = deepLink else { return }
+        deepLink = nil
+        path.append(d)
     }
 
     private var pendingCount: String {
@@ -493,6 +523,7 @@ struct NewFriendsView: View {
 struct MeView: View {
     @EnvironmentObject var store: Store
     @EnvironmentObject var session: Session
+    @Binding var deepLink: Route?
     @State private var path: [Route] = []
 
     var body: some View {
@@ -537,6 +568,14 @@ struct MeView: View {
             }
             .appDest()
             .toolbar(.hidden, for: .navigationBar)
+            .onAppear { pushDeepLink() }
+            .onChange(of: deepLink) { _ in pushDeepLink() }
         }
+    }
+
+    private func pushDeepLink() {
+        guard let d = deepLink else { return }
+        deepLink = nil
+        path.append(d)
     }
 }

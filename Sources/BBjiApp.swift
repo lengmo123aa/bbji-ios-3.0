@@ -32,7 +32,11 @@ struct RootView: View {
             if session.loggedIn {
                 MainTabs()
                     .onAppear {
-                        if !store.connected { store.connect(token: session.token, onFail: { session.logout() }) }
+                        if ProcessInfo.isDemo {
+                            store.seedDemo()
+                        } else if !store.connected {
+                            store.connect(token: session.token, onFail: { session.logout() })
+                        }
                     }
             } else {
                 AuthFlow()

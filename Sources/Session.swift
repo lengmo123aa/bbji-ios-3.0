@@ -37,6 +37,10 @@ final class Session: ObservableObject {
             myId = (me["bbjiId"] as? String) ?? (me["account"] as? String) ?? ""
             loggedIn = true          // 先按"登着"进主界面，M1 再加一次 token 校验
         }
+        /* CI 截图用的演示模式 */
+        if ProcessInfo.isDemo {
+            demoLogin()
+        }
     }
 
     /// 设备标识：第一次装的时候生成一个，之后一直用它（跟电脑端一样，服务端按设备算 token）
