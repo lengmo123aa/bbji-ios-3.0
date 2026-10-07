@@ -110,21 +110,20 @@ struct GlassBlobs: View {
             /* o1：190×190 的主 blob（不规则圆，用两轴缩放的椭圆近似） */
             BlobShape()
                 .frame(width: 190, height: 190)
-                .foregroundStyle(
-                    RadialGradient(colors: [.white.opacity(0.99), .white.opacity(0.20), .white.opacity(0)],
-                                   center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120)
-                    .overlay(
+                .background(
+                    ZStack {
+                        LinearGradient(colors: [Color(red: 0.863, green: 0.914, blue: 0.988).opacity(0.97),
+                                                Color(red: 0.706, green: 0.800, blue: 0.949).opacity(0.84)],
+                                       startPoint: .topLeading, endPoint: .bottomTrailing)
                         RadialGradient(colors: [Color(red: 0.557, green: 0.706, blue: 0.933).opacity(0.88),
                                                 Color(red: 0.737, green: 0.824, blue: 0.965).opacity(0.52),
                                                 .white.opacity(0)],
                                        center: UnitPoint(x: 0.68, y: 0.74), startRadius: 0, endRadius: 160)
-                    )
-                    .overlay(
-                        LinearGradient(colors: [Color(red: 0.863, green: 0.914, blue: 0.988).opacity(0.97),
-                                                Color(red: 0.706, green: 0.800, blue: 0.949).opacity(0.84)],
-                                       startPoint: .topLeading, endPoint: .bottomTrailing)
-                    )
+                        RadialGradient(colors: [.white.opacity(0.99), .white.opacity(0.20), .white.opacity(0)],
+                                       center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120)
+                    }
                 )
+                .clipShape(BlobShape())
                 .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
                 .overlay(
                     /* o1 的高光条 */
@@ -210,7 +209,7 @@ struct LoginScreen: View {
                                  placeholder: "邮箱 / BB鸡号", keyboard: .emailAddress)
                         RowSep()
                         FieldRow(label: "密码", text: $password,
-                                 placeholder: "密码", secure: true, reveal: $showPwd,
+                                 placeholder: "密码", secure: true,
                                  trailing: AnyView(
                                      Button {
                                          H.sel()
@@ -221,7 +220,8 @@ struct LoginScreen: View {
                                              .foregroundColor(T.sec)
                                              .padding(.leading, 6)
                                      }
-                                 ))
+                                 ),
+                                 reveal: $showPwd)
                     }
                     .bbCard()
                     .padding(.top, 22)
