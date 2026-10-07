@@ -108,30 +108,38 @@ struct GlassBlobs: View {
     var body: some View {
         ZStack {
             MainBlob()
-            Circle()
-                .frame(width: 86, height: 86)
-                .background(
-                    LinearGradient(colors: [Color(red: 0.894, green: 0.933, blue: 0.992).opacity(0.95),
-                                            Color(red: 0.761, green: 0.839, blue: 0.969).opacity(0.80)],
-                                   startPoint: .topLeading, endPoint: .bottomTrailing)
-                )
-                .clipShape(Circle())
-                .overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 0.5))
-                .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.15), radius: 12, y: 11)
-                .offset(x: (238 / 2) - (86 / 2) - 2, y: -(204 / 2) + (86 / 2) + 2)
-
-            Circle()
-                .frame(width: 60, height: 60)
-                .background(
-                    LinearGradient(colors: [Color(red: 0.941, green: 0.961, blue: 0.992).opacity(0.92),
-                                            Color(red: 0.831, green: 0.890, blue: 0.973).opacity(0.68)],
-                                   startPoint: .topLeading, endPoint: .bottomTrailing)
-                )
-                .clipShape(Circle())
-                .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.13), radius: 10, y: 9)
-                .offset(x: -(238 / 2) + (60 / 2) + 2, y: (204 / 2) - (60 / 2) - 2)
+            SmallBlob(d: 86, ox: 74, oy: -57, highlight: true)
+            SmallBlob(d: 60, ox: -70, oy: 70, highlight: false)
         }
         .frame(width: 238, height: 204)
+    }
+}
+
+private struct SmallBlob: View {
+    let d: CGFloat
+    let ox: CGFloat
+    let oy: CGFloat
+    let highlight: Bool
+
+    var body: some View {
+        let a: Double = highlight ? 0.95 : 0.92
+        let b: Double = highlight ? 0.80 : 0.68
+        let top = Color(red: 0.90 + (highlight ? 0 : 0.02), green: 0.93 + (highlight ? 0 : 0.02), blue: 0.99)
+        let bot = Color(red: 0.76, green: 0.84, blue: 0.97)
+        return Circle()
+            .frame(width: d, height: d)
+            .background(
+                LinearGradient(colors: [top.opacity(a), bot.opacity(b)],
+                               startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .clipShape(Circle())
+            .overlay(
+                highlight
+                    ? AnyView(Circle().stroke(.white.opacity(0.5), lineWidth: 0.5))
+                    : AnyView(Color.clear)
+            )
+            .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.14), radius: 11, y: 10)
+            .offset(x: ox, y: oy)
     }
 }
 
