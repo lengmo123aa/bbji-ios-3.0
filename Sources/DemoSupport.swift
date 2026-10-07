@@ -18,7 +18,6 @@ extension Session {
     func demoLogin() {
         myName = "象象"
         myId = "10086"
-        myEmail = "xiang@example.com"
         loggedIn = true
     }
 }
@@ -64,7 +63,7 @@ extension Store {
         muted = ["u_xing"]
         markRead("g_test")
         /* 锁屏截图要用：预置一个 4 位锁定密码 */
-        if UserDefaults.standard.string(forKey: "bbji30_lock_pw").isNullOrIntEmpty {
+        if (UserDefaults.standard.string(forKey: "bbji30_lock_pw") ?? "").count != 4 {
             UserDefaults.standard.set("1234", forKey: "bbji30_lock_pw")
         }
     }
