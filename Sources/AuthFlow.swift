@@ -122,20 +122,16 @@ private struct SmallBlob: View {
     let highlight: Bool
 
     var body: some View {
-        let a: Double = highlight ? 0.95 : 0.92
-        let b: Double = highlight ? 0.80 : 0.68
-        let top = Color(red: 0.90 + (highlight ? 0 : 0.02), green: 0.93 + (highlight ? 0 : 0.02), blue: 0.99)
-        let bot = Color(red: 0.76, green: 0.84, blue: 0.97)
-        return Circle()
+        let top = Color(red: 0.894, green: 0.933, blue: 0.992)
+        let bot = Color(red: 0.761, green: 0.839, blue: 0.969)
+        let c = Circle()
+        return c
+            .fill(LinearGradient(colors: [highlight ? top : top.opacity(0.92), bot.opacity(highlight ? 0.80 : 0.68)],
+                                 startPoint: .topLeading, endPoint: .bottomTrailing))
             .frame(width: d, height: d)
-            .background(
-                LinearGradient(colors: [top.opacity(a), bot.opacity(b)],
-                               startPoint: .topLeading, endPoint: .bottomTrailing)
-            )
-            .clipShape(Circle())
             .overlay(
                 highlight
-                    ? AnyView(Circle().stroke(.white.opacity(0.5), lineWidth: 0.5))
+                    ? AnyView(c.stroke(.white.opacity(0.5), lineWidth: 0.5).frame(width: d, height: d))
                     : AnyView(Color.clear)
             )
             .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.14), radius: 11, y: 10)
@@ -147,10 +143,18 @@ private struct MainBlob: View {
     var body: some View {
         let blob = BlobShape()
         return blob
+            .fill(LinearGradient(colors: [Color(red: 0.914, green: 0.949, blue: 0.996),
+                                          Color(red: 0.694, green: 0.792, blue: 0.945)],
+                                 startPoint: .topLeading, endPoint: .bottomTrailing))
             .frame(width: 190, height: 190)
-            .background(blobFill)
-            .clipShape(blob)
-            .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
+            .overlay(
+                BlobShape()
+                    .fill(RadialGradient(colors: [.white.opacity(0.99),
+                                                  .white.opacity(0.20),
+                                                  .white.opacity(0)],
+                                         center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120))
+                    .frame(width: 190, height: 190)
+            )
             .overlay(
                 Ellipse()
                     .fill(.white.opacity(0.88))
@@ -158,21 +162,9 @@ private struct MainBlob: View {
                     .blur(radius: 3)
                     .rotationEffect(.degrees(-18))
                     .offset(x: 190 * 0.06, y: -190 * 0.24)
+                    .clipShape(blob.frame(width: 190, height: 190))
             )
-    }
-
-    private var blobFill: some View {
-        ZStack {
-            LinearGradient(colors: [Color(red: 0.863, green: 0.914, blue: 0.988).opacity(0.97),
-                                    Color(red: 0.706, green: 0.800, blue: 0.949).opacity(0.84)],
-                           startPoint: .topLeading, endPoint: .bottomTrailing)
-            RadialGradient(colors: [Color(red: 0.557, green: 0.706, blue: 0.933).opacity(0.88),
-                                    Color(red: 0.737, green: 0.824, blue: 0.965).opacity(0.52),
-                                    .white.opacity(0)],
-                           center: UnitPoint(x: 0.68, y: 0.74), startRadius: 0, endRadius: 160)
-            RadialGradient(colors: [.white.opacity(0.99), .white.opacity(0.20), .white.opacity(0)],
-                           center: UnitPoint(x: 0.32, y: 0.24), startRadius: 0, endRadius: 120)
-        }
+            .shadow(color: Color(red: 0.494, green: 0.627, blue: 0.839).opacity(0.19), radius: 19, y: 18)
     }
 }
 
