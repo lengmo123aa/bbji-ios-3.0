@@ -499,7 +499,7 @@ struct MeView: View {
         NavigationStack(path: $path) {
             AppBg()
             VStack(spacing: 0) {
-                TopTitle(text: "我")
+                TopTitle("我")
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
                         VStack(spacing: 0) {
