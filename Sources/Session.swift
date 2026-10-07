@@ -14,6 +14,18 @@ final class Session: ObservableObject {
     @Published var myId = ""
     @Published var busy = false
     @Published var err = ""
+    @Published var locked = false            /* 锁定覆盖层（46/47） */
+    var lockMsg = ""
+
+    /* 锁定设置：离开就锁 + 密码有没有设过 */
+    var lockPwOn: Bool {
+        get { UserDefaults.standard.bool(forKey: "bbji30_lock_on") }
+        set { UserDefaults.standard.set(newValue, forKey: "bbji30_lock_on") }
+    }
+    var lockPwSet: Bool {
+        let v = UserDefaults.standard.string(forKey: "bbji30_lock_pw") ?? ""
+        return v.count == 4
+    }
 
     private(set) var token = ""
 

@@ -78,6 +78,7 @@ final class Store: ObservableObject {
     @Published var pinned: [String] = []      // 置顶（本机存的，跟电脑端一样是本地状态）
     @Published var muted: [String] = []       // 免打扰
     @Published var hidden: [String] = []      // 删掉的会话（本机不再显示）
+    @Published var burn: [String] = []        // 阅后即焚（本机开关）
     @Published var meName = ""
     @Published var meId = ""
 
@@ -435,10 +436,15 @@ final class Store: ObservableObject {
         if !hidden.contains(id) { hidden.append(id) }
         UserDefaults.standard.set(hidden, forKey: "bbji_hidden")
     }
+    func toggleBurn(_ id: String) {
+        if let i = burn.firstIndex(of: id) { burn.remove(at: i) } else { burn.append(id) }
+        UserDefaults.standard.set(burn, forKey: "bbji_burn")
+    }
     func loadLocalSets() {
         pinned = UserDefaults.standard.stringArray(forKey: "bbji_pin") ?? []
         muted = UserDefaults.standard.stringArray(forKey: "bbji_mute") ?? []
         hidden = UserDefaults.standard.stringArray(forKey: "bbji_hidden") ?? []
+        burn = UserDefaults.standard.stringArray(forKey: "bbji_burn") ?? []
     }
 
     /* ---------- 图片：上传 → 发一条 kind=image 的消息 ---------- */

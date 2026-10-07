@@ -3,48 +3,48 @@ import SwiftUI
 @main
 struct BBjiApp: App {
     @StateObject private var session = Session()
+    @StateObject private var store = Store()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(session)
+                .environmentObject(store)
                 .preferredColorScheme(.light)
+        }
+        .onChange(of: scenePhase) { phase in
+            /* 离开就锁：切后台 / 关屏 → 上锁 */
+            if phase != .active, session.lockPwOn, session.lockPwSet {
+                session.locked = true
+            }
+            /* 进后台就断不了 WS —— Store 自己有心跳和重连，不管它 */
         }
     }
 }
 
 struct RootView: View {
     @EnvironmentObject var session: Session
+    @EnvironmentObject var store: Store
 
     var body: some View {
         ZStack {
-            AppBg()
             if session.loggedIn {
-                HomePlaceholder()
+                MainTabs()
+                    .onAppear {
+                        if !store.connected { store.connect(token: session.token, onFail: { session.logout() }) }
+                    }
             } else {
                 AuthFlow()
             }
-        }
-        .animation(.spring(response: 0.4, dampingFraction: 0.9), value: session.loggedIn)
-    }
-}
-
-/* 登录后的占位页 —— 消息列表是下一轮的活，先占个位 */
-struct HomePlaceholder: View {
-    @EnvironmentObject var session: Session
-    var body: some View {
-        VStack(spacing: 12) {
-            BrandView(logoSize: 62)
-            Text("登录成功：\(session.myName)")
-                .font(.system(size: 13, weight: .medium)).foregroundColor(T.ink)
-            Text("06 消息列表下一轮做")
-                .font(.system(size: 11.5)).foregroundColor(T.tag2Gray)
-            Button {
-                session.logout()
-            } label: {
-                Text("退出登录").font(.system(size: 13)).foregroundColor(T.blue)
+            /* 46/47 锁定覆盖层 */
+            if session.locked && session.lockPwSet {
+                LockOverlay()
+                    .transition(.opacity)
+                    .zIndex(99)
             }
-            .padding(.top, 20)
         }
+        .animation(.easeInOut(duration: 0.25), value: session.locked)
+        .animation(.spring(response: 0.4, dampingFraction: 0.9), value: session.loggedIn)
     }
 }
