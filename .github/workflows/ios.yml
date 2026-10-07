@@ -72,12 +72,12 @@ jobs:
           # 01 启动页
           xcrun simctl install "$BOOT" "$APP"
           xcrun simctl launch "$BOOT" $BID
-          sleep 4
+          sleep 10
           xcrun simctl io "$BOOT" screenshot shot-01-启动页.png || true
           xcrun simctl terminate "$BOOT" $BID || true
           # 02 登录页（跳过启动页）
           xcrun simctl launch "$BOOT" $BID -login
-          sleep 3
+          sleep 6
           xcrun simctl io "$BOOT" screenshot shot-02-登录页.png || true
           xcrun simctl terminate "$BOOT" $BID || true
           ls -la *.png
