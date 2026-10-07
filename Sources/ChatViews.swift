@@ -31,6 +31,7 @@ struct ChatView: View {
     private var peer: Person? { isGroup ? nil : store.people[convId] }
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             navBar
@@ -39,6 +40,7 @@ struct ChatView: View {
             if let q = quote { quoteBar(q) }
             if plusOpen { PlusPanel(onImage: { pickerOpen = true }, onCall: { callState = .voiceOut }, onVideo: { callState = .video }) }
             inputBar
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
         .fullScreenCover(item: $viewerURL) { url in ImageViewer(url: url, onForward: {
@@ -546,6 +548,7 @@ struct ForwardView: View {
     @State private var done = false
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "转发到…", onBack: { dismiss() })
@@ -562,6 +565,7 @@ struct ForwardView: View {
                 .padding(.bottom, 20)
             }
             bottomBar
+        }
         }
         .onDisappear { if done { } }
     }

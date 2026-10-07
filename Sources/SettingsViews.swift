@@ -11,6 +11,7 @@ struct SettingsHomeView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "设置", onBack: { dismiss() })
@@ -37,6 +38,7 @@ struct SettingsHomeView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -49,6 +51,7 @@ struct AccountView: View {
     @State private var confirmOut = false
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "账号与安全", onBack: { dismiss() })
@@ -90,6 +93,7 @@ struct AccountView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
         .confirmationDialog("退出后要重新登录才能进来", isPresented: $confirmOut, titleVisibility: .visible) {
             Button("退出登录", role: .destructive) {
@@ -110,6 +114,7 @@ struct PrivacyView: View {
     @AppStorage("bbji30_lock_bio") private var allowBio = true
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "隐私与锁定", onBack: { dismiss() })
@@ -150,6 +155,7 @@ struct PrivacyView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
         .overlay {
@@ -288,6 +294,7 @@ struct LockRulesView: View {
     @AppStorage("bbji30_lock_call") private var allowCall = true
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "锁定规则", onBack: { dismiss() })
@@ -316,6 +323,7 @@ struct LockRulesView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -496,6 +504,7 @@ struct NotifyView: View {
     @AppStorage("bbji30_nt_screen") private var onlyScreen = false
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "消息通知", onBack: { dismiss() })
@@ -541,6 +550,7 @@ struct NotifyView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -553,6 +563,7 @@ struct KeepAliveView: View {
     @AppStorage("bbji30_ka_music") private var music = true
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "后台保活", onBack: { dismiss() })
@@ -578,6 +589,7 @@ struct KeepAliveView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -594,6 +606,7 @@ struct PushStyleView: View {
     ]
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "推送正文样式", onBack: { dismiss() })
@@ -642,6 +655,7 @@ struct PushStyleView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -654,6 +668,7 @@ struct PushAPIView: View {
     @State private var toast = ""
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "推送 API", onBack: { dismiss() })
@@ -698,6 +713,7 @@ struct PushAPIView: View {
                 .padding(.bottom, 30)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
         .onAppear { keyDraft = barkKey }
     }
@@ -714,6 +730,7 @@ struct BarkGuideView: View {
     ]
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "Bark 配置教程", onBack: { dismiss() })
@@ -757,6 +774,7 @@ struct BarkGuideView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -766,6 +784,7 @@ struct GeneralView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "通用设置", onBack: { dismiss() })
@@ -796,6 +815,7 @@ struct GeneralView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 
@@ -810,6 +830,7 @@ struct HelpView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "帮助与反馈", onBack: { dismiss() })
@@ -847,6 +868,7 @@ struct HelpView: View {
                 .padding(.bottom, 40)
             }
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -856,6 +878,7 @@ struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "关于我们", onBack: { dismiss() })
@@ -885,6 +908,7 @@ struct AboutView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }

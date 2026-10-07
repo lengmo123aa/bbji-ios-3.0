@@ -45,6 +45,7 @@ struct MainTabs: View {
     @EnvironmentObject var store: Store
     @State private var tab: Int
     @State private var deepLink: Route? = nil
+    @State private var pushed = false
 
     init() {
         var t = 0
@@ -60,12 +61,12 @@ struct MainTabs: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             Group {
-                if tab == 0 { MessagesView(deepLink: $deepLink) }
-                else if tab == 1 { ContactsView(deepLink: $deepLink) }
-                else { MeView(deepLink: $deepLink) }
+                if tab == 0 { MessagesView(deepLink: $deepLink, pushed: $pushed) }
+                else if tab == 1 { ContactsView(deepLink: $deepLink, pushed: $pushed) }
+                else { MeView(deepLink: $deepLink, pushed: $pushed) }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            TabBar(sel: $tab)
+            if !pushed { TabBar(sel: $tab) }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
@@ -114,6 +115,7 @@ extension View { func appDest() -> some View { modifier(Destinations()) } }
 struct MessagesView: View {
     @EnvironmentObject var store: Store
     @Binding var deepLink: Route?
+    @Binding var pushed: Bool
     @State private var plusMenu = false
     @State private var path: [Route] = []
 
@@ -170,6 +172,7 @@ struct MessagesView: View {
             .toolbar(.hidden, for: .navigationBar)
             .onAppear { pushDeepLink() }
             .onChange(of: deepLink) { _ in pushDeepLink() }
+            .onChange(of: path) { pushed = !$0.isEmpty }
         }
     }
 
@@ -340,6 +343,7 @@ struct SwipeableRow: View {
 struct ContactsView: View {
     @EnvironmentObject var store: Store
     @Binding var deepLink: Route?
+    @Binding var pushed: Bool
     @State private var path: [Route] = []
 
     private var sections: [(String, [Person])] {
@@ -356,6 +360,7 @@ struct ContactsView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
+            ZStack(alignment: .top) {
             AppBg()
             VStack(spacing: 0) {
                 TopTitle(text: "通讯录") {
@@ -412,10 +417,12 @@ struct ContactsView: View {
                     .padding(.bottom, 90)
                 }
             }
+            }
             .appDest()
             .toolbar(.hidden, for: .navigationBar)
             .onAppear { pushDeepLink() }
             .onChange(of: deepLink) { _ in pushDeepLink() }
+            .onChange(of: path) { pushed = !$0.isEmpty }
         }
     }
 
@@ -437,6 +444,7 @@ struct NewFriendsView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "新的朋友", onBack: { dismiss() })
@@ -479,6 +487,7 @@ struct NewFriendsView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
         }
     }
 
@@ -524,10 +533,12 @@ struct MeView: View {
     @EnvironmentObject var store: Store
     @EnvironmentObject var session: Session
     @Binding var deepLink: Route?
+    @Binding var pushed: Bool
     @State private var path: [Route] = []
 
     var body: some View {
         NavigationStack(path: $path) {
+            ZStack(alignment: .top) {
             AppBg()
             VStack(spacing: 0) {
                 TopTitle("我")
@@ -566,10 +577,12 @@ struct MeView: View {
                     .padding(.bottom, 90)
                 }
             }
+            }
             .appDest()
             .toolbar(.hidden, for: .navigationBar)
             .onAppear { pushDeepLink() }
             .onChange(of: deepLink) { _ in pushDeepLink() }
+            .onChange(of: path) { pushed = !$0.isEmpty }
         }
     }
 

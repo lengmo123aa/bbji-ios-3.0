@@ -187,6 +187,7 @@ struct MyProfileView: View {
     @State private var avatarSheet = false
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "我的资料", onBack: { dismiss() })
@@ -218,6 +219,7 @@ struct MyProfileView: View {
                 }
                 .padding(.top, 4).padding(.bottom, 40)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $avatarSheet) {
@@ -302,6 +304,7 @@ struct EditNickView: View {
     @State private var saving = false
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "改昵称", onBack: { dismiss() })
@@ -328,6 +331,7 @@ struct EditNickView: View {
             }
             .padding(.horizontal, 14).padding(.bottom, 22)
         }
+        }
         .onAppear { name = store.meName }
     }
 }
@@ -339,6 +343,7 @@ struct NewChatView: View {
     @State private var path: [Route] = []
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "新建聊天", onBack: { dismiss() })
@@ -383,6 +388,7 @@ struct NewChatView: View {
                 .padding(.bottom, 30)
             }
         }
+        }
         .appDest()
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -420,6 +426,7 @@ struct AddFriendView: View {
     @State private var tip = ""
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "添加好友", onBack: { dismiss() })
@@ -486,6 +493,7 @@ struct AddFriendView: View {
                 }
                 .padding(.bottom, 30)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -579,6 +587,7 @@ struct PickMembersView: View {
     @State private var selected: [String] = []
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "选择联系人", onBack: { dismiss() })
@@ -627,6 +636,7 @@ struct PickMembersView: View {
                 .padding(.bottom, 20)
             }
             bottomBar
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }

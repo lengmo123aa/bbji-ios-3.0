@@ -20,6 +20,7 @@ struct GroupSettingsView: View {
     }
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: g?.name ?? "群聊", onBack: { dismiss() })
@@ -80,6 +81,7 @@ struct GroupSettingsView: View {
                 }
                 .padding(.bottom, 40)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
@@ -148,6 +150,7 @@ struct GroupMembersView: View {
     @State private var path: [Route] = []
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "群成员（\(store.groupOf(gid)?.members.count ?? 0)）", onBack: { dismiss() })
@@ -192,6 +195,7 @@ struct GroupMembersView: View {
             }
             .padding(.horizontal, 14).padding(.bottom, 20)
         }
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
 }
@@ -206,6 +210,7 @@ struct GroupQRView: View {
     private var title: String { gid == "me" ? (store.meName.isEmpty ? "我的二维码" : store.meName) : (store.groupOf(gid)?.name ?? "群二维码") }
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: gid == "me" ? "我的二维码" : "群二维码", onBack: { dismiss() })
@@ -233,6 +238,7 @@ struct GroupQRView: View {
                 }
                 .padding(.horizontal, 14).padding(.bottom, 24)
             }
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
@@ -273,6 +279,7 @@ struct InviteView: View {
     @State private var msg = "一起来聊聊吧"
 
     var body: some View {
+        ZStack(alignment: .top) {
         AppBg()
         VStack(spacing: 0) {
             NavBar(title: "邀请好友进群", onBack: { dismiss() })
@@ -323,6 +330,7 @@ struct InviteView: View {
                 dismiss()
             }
             .padding(.horizontal, 14).padding(.bottom, 20)
+        }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
